@@ -60,7 +60,6 @@ export function SignupForm() {
       });
 
       router.push("/profile-setup");
-      router.refresh();
     } catch (err: unknown) {
       toast({
         variant: "destructive",

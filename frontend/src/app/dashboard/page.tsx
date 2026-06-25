@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MessageCircle, Camera, ChefHat, User, TrendingUp,
-  Weight, Ruler, Activity, Target, Loader2, ArrowRight,
+  Weight, Ruler, Target, ArrowRight,
 } from "lucide-react";
 import { formatGoal, formatActivityLevel, getBMIColor, formatDate } from "@/lib/utils";
 
@@ -22,7 +22,7 @@ export default function DashboardPage() {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-12 w-64" />

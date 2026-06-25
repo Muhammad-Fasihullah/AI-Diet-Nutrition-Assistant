@@ -31,13 +31,14 @@ export function LoginForm() {
       if (error) throw error;
 
       // Check if profile exists -> route accordingly
-      try {
-        await profileAPI.get();
-        router.push("/dashboard");
-      } catch {
-        router.push("/profile-setup");
-      }
-      router.refresh();
+    try {
+      await profileAPI.get();
+      router.push("/dashboard");
+      router.refresh(); // ✅
+}   catch {
+     router.push("/profile-setup");
+     router.refresh(); // ✅
+}
     } catch (err: unknown) {
       toast({
         variant: "destructive",

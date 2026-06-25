@@ -1,13 +1,14 @@
 import axios from "axios";
 import { createClient } from "@/lib/supabase/client";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = "/api";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
-  timeout: 120000,  
+  timeout: 120000,
 });
+
 // Attach Supabase JWT on every request
 apiClient.interceptors.request.use(async (config) => {
   const supabase = createClient();
@@ -21,18 +22,20 @@ apiClient.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Global error handler
+// Global response error handler
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const message =
       error.response?.data?.detail || error.message || "An error occurred";
 
-    if (error.response?.status === 401) {
-      // Token expired — redirect to login
-      if (typeof window !== "undefined") {
-        window.location.href = "/auth/login";
-      }
+    // Only redirect to login if 401 and NOT already on an auth page
+    if (
+      error.response?.status === 401 &&
+      typeof window !== "undefined" &&
+      !window.location.pathname.startsWith("/auth")
+    ) {
+      window.location.href = "/auth/login";
     }
 
     return Promise.reject(new Error(message));
@@ -41,14 +44,6 @@ apiClient.interceptors.response.use(
 
 // ─── API service functions ────────────────────────────────────────────────────
 
-export const authAPI = {
-  signup: (email: string, password: string) =>
-    apiClient.post("/auth/signup", { email, password }),
-
-  login: (email: string, password: string) =>
-    apiClient.post("/auth/login", { email, password }),
-};
-
 export const profileAPI = {
   create: (data: object) => apiClient.post("/profile", data),
   get: () => apiClient.get("/profile"),
@@ -56,11 +51,8 @@ export const profileAPI = {
 };
 
 export const chatAPI = {
-  sendMessage: (message: string) =>
-    apiClient.post("/chat", { message }),
-
+  sendMessage: (message: string) => apiClient.post("/chat", { message }),
   getHistory: () => apiClient.get("/chat/history"),
-
   clearHistory: () => apiClient.delete("/chat/history"),
 };
 
@@ -69,15 +61,14 @@ export const foodAPI = {
     apiClient.post("/analyze-food", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
-
   getHistory: () => apiClient.get("/analyze-food/history"),
 };
+
 export const recipeAPI = {
   generate: (formData: FormData) =>
     apiClient.post("/generate-recipe", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
-
   getHistory: () => apiClient.get("/generate-recipe/history"),
 };
 

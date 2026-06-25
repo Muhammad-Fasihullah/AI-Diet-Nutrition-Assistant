@@ -9,11 +9,12 @@ import { cn } from "@/lib/utils";
 
 interface FoodUploaderProps {
   onFileSelect: (file: File) => void;
+  onClear: () => void;
   previewUrl: string | null;
   isAnalyzing: boolean;
 }
 
-export function FoodUploader({ onFileSelect, previewUrl, isAnalyzing }: FoodUploaderProps) {
+export function FoodUploader({ onFileSelect, onClear, previewUrl, isAnalyzing }: FoodUploaderProps) {
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -55,7 +56,7 @@ export function FoodUploader({ onFileSelect, previewUrl, isAnalyzing }: FoodUplo
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => { window.location.reload(); }}
+              onClick={onClear}
               className="absolute top-3 right-3"
             >
               <X className="h-4 w-4 mr-1" /> Upload another

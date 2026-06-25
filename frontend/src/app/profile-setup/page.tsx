@@ -1,5 +1,5 @@
 "use client";
-
+import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { profileAPI } from "@/lib/api";
@@ -64,16 +64,15 @@ export default function ProfileSetupPage() {
   async function handleSubmit() {
     setLoading(true);
     try {
-      await profileAPI.create({
-        name: form.name,
-        age: parseInt(form.age),
-        gender: form.gender,
-        weight: parseFloat(form.weight),
-        height: parseFloat(form.height),
-        activity_level: form.activity_level,
-        goal: form.goal,
+      // Session fresh karo submit se pehle
+      const supabase = createClient();
+      await supabase.auth.getSession(); // session warm up
+
+      await profileAPI.create(form);
+      toast({
+        title: "Profile saved!",
+        description: "Your profile has been saved successfully.",
       });
-      toast({ title: "Profile saved!", description: "Welcome to your nutrition assistant." });
       router.push("/dashboard");
     } catch (err: unknown) {
       toast({

@@ -81,6 +81,7 @@ export default function FoodAnalysisPage() {
       {/* Uploader */}
       <FoodUploader
         onFileSelect={handleFileSelect}
+        onClear={() => { setPreviewUrl(null); setCurrentResult(null); }}
         previewUrl={previewUrl}
         isAnalyzing={analyzeMutation.isPending}
       />

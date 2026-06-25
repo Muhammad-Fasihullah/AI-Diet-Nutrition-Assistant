@@ -41,7 +41,6 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
     await supabase.auth.signOut();
     toast({ title: "Logged out", description: "See you next time!" });
     router.push("/auth/login");
-    router.refresh();
   }
 
   const initials = userName

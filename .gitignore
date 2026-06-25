@@ -44,6 +44,8 @@ Thumbs.db
 # Misc
 *.log
 .vercel
+*.tsbuildinfo
+frontend/src/proxy.ts
 
 # Large archives (use release assets instead)
 *.zip
